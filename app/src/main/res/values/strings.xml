@@ -3,4 +3,6 @@
     <string name="title_home">Home</string>
     <string name="title_message">Message</string>
     <string name="title_settings">Settings</string>
+    <string name="feature_restriction_message">Sign up or login to access Private messaging</string>
+    <string name="feature_restriction_setting">Sign up or login to see your settings</string>
 </resources>

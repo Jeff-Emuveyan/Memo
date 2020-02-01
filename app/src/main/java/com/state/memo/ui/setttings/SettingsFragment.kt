@@ -13,6 +13,7 @@ import com.state.memo.R
 class SettingsFragment : Fragment() {
 
     private lateinit var settingsViewModel: SettingsViewModel
+    private lateinit var textViewInfo: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,10 +23,22 @@ class SettingsFragment : Fragment() {
         settingsViewModel =
             ViewModelProviders.of(this).get(SettingsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_settings, container, false)
-        val textView: TextView = root.findViewById(R.id.text_notifications)
-        settingsViewModel.text.observe(this, Observer {
-            textView.text = it
-        })
+        textViewInfo = root.findViewById(R.id.text_info)
+
         return root
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        //check if there is a user account in the database
+        context?.let {
+            val user = settingsViewModel.getUser(it).value
+            if(user == null){
+
+            }
+
+        }
     }
 }

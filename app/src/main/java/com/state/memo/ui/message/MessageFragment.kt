@@ -14,6 +14,7 @@ import com.state.memo.R
 class MessageFragment : Fragment() {
 
     private lateinit var messageViewModel: MessageViewModel
+    private lateinit var textViewInfo: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,10 +23,7 @@ class MessageFragment : Fragment() {
     ): View? {
         messageViewModel = ViewModelProviders.of(this).get(MessageViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_message, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
-        messageViewModel.text.observe(this, Observer {
-            textView.text = it
-        })
+        textViewInfo = root.findViewById(R.id.text_info)
         return root
     }
 
@@ -35,7 +33,7 @@ class MessageFragment : Fragment() {
         //check if there is a user account in the database
         context?.let {
             val user = messageViewModel.getUser(it).value
-            if(user != null){
+            if(user == null){
 
             }
 
