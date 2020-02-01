@@ -5,4 +5,9 @@
     <string name="title_settings">Settings</string>
     <string name="feature_restriction_message">Sign up or login to access Private messaging</string>
     <string name="feature_restriction_setting">Sign up or login to see your settings</string>
+    <string name="share">Share</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_out">Sign out</string>
+    <string name="about">About</string>
+    <string name="signup">Sign up</string>
 </resources>
