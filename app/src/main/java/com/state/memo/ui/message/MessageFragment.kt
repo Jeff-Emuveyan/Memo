@@ -1,6 +1,7 @@
 package com.state.memo.ui.message
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,8 +26,19 @@ class MessageFragment : Fragment() {
         messageViewModel.text.observe(this, Observer {
             textView.text = it
         })
-
-
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        //check if there is a user account in the database
+        context?.let {
+            val user = messageViewModel.getUser(it).value
+            if(user != null){
+
+            }
+
+        }
     }
 }
