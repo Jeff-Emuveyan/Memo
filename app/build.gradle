@@ -71,4 +71,8 @@ dependencies {
 
     // Testing
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
+
+
+    //Firebase Auth UI
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
 }
