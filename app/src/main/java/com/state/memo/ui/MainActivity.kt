@@ -52,16 +52,17 @@ class MainActivity : AppCompatActivity() {
         FirebaseApp.initializeApp(this)
 
         //we place a listener to know when the user has signed out:
+        //This will trigger anytime the user sign out. Successfully or not.
         val firebaseAuth = FirebaseAuth.getInstance()
         firebaseAuth.addAuthStateListener {
             val user = it.currentUser
 
             if (user == null){//user has logged out:
-                //change UI for logout
+                //change UI for logout/no user
+                Snackbar.make(window.decorView.rootView, "Done", Snackbar.LENGTH_LONG).show()
 
             }else{
-                //there is a user, read his data from db.
-
+                Log.e("User state", "There is user")
             }
         }
     }
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                 launchFirebaseAuthentication()
             }
             R.id.sign_out ->{
-                signOut()
+               viewModel.signOut(this@MainActivity)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -101,18 +102,6 @@ class MainActivity : AppCompatActivity() {
             RC_SIGN_IN)
     }
 
-
-    private fun signOut(){
-        AuthUI.getInstance().signOut(this).addOnCompleteListener {
-            //this call will cause addAuthStateListener() to trigger.
-            if (it.isSuccessful){
-                Snackbar.make(window.decorView.rootView, "Done", Snackbar.LENGTH_LONG).show()
-            }
-        }.addOnFailureListener {
-            //this call will cause addAuthStateListener() to trigger.
-            Snackbar.make(window.decorView.rootView, it.message.toString(), Snackbar.LENGTH_LONG).show()
-        }
-    }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
