@@ -1,25 +1,40 @@
 package com.state.memo.ui
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import android.view.Menu
-import android.view.MenuItem
+import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.ErrorCodes
+import com.firebase.ui.auth.IdpResponse
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 import com.state.memo.R
-
-
+import com.state.memo.util.showSnackMessage
 
 
 class MainActivity : AppCompatActivity() {
+
+    private val RC_SIGN_IN: Int = 44
+    lateinit var viewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        viewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
 
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
@@ -33,6 +48,22 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        FirebaseApp.initializeApp(this)
+
+        //we place a listener to know when the user has signed out:
+        val firebaseAuth = FirebaseAuth.getInstance()
+        firebaseAuth.addAuthStateListener {
+            val user = it.currentUser
+
+            if (user == null){//user has logged out:
+                //change UI for logout
+
+            }else{
+                //there is a user, read his data from db.
+
+            }
+        }
     }
 
 
@@ -47,9 +78,75 @@ class MainActivity : AppCompatActivity() {
         when(item.itemId){
 
             R.id.sign_up ->{
-
+                launchFirebaseAuthentication()
+            }
+            R.id.sign_out ->{
+                signOut()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+    /**
+     * Uses firebase UI auth to sign up a user
+     * ***/
+    private fun launchFirebaseAuthentication(){
+
+        startActivityForResult(
+            AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(viewModel.getAuthProviders())
+                .build(),
+            RC_SIGN_IN)
+    }
+
+
+    private fun signOut(){
+        AuthUI.getInstance().signOut(this).addOnCompleteListener {
+            //this call will cause addAuthStateListener() to trigger.
+            if (it.isSuccessful){
+                Snackbar.make(window.decorView.rootView, "Done", Snackbar.LENGTH_LONG).show()
+            }
+        }.addOnFailureListener {
+            //this call will cause addAuthStateListener() to trigger.
+            Snackbar.make(window.decorView.rootView, it.message.toString(), Snackbar.LENGTH_LONG).show()
+        }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            handleSignIn(resultCode, data)
+        }
+    }
+
+    private fun handleSignIn(resultCode : Int, data: Intent?) {
+        val response = IdpResponse.fromResultIntent(data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            // Successfully signed in
+            val user = FirebaseAuth.getInstance().currentUser
+            //Log.e(MainActivity::class.java.simpleName, "name: ${user?.displayName!!}  ${user.phoneNumber}  ${user.email} ${user.photoUrl.toString()}")
+            viewModel.userHasLoggedIn.value = true //set the live data
+        } else {
+            viewModel.userHasLoggedIn.value = false //set the live data
+            // Sign in failed. If response is null the user canceled the
+            // sign-in flow using the back button. Otherwise check
+            // response.getError().getErrorCode() and handle the error.
+            handleSignInError(response)
+        }
+    }
+
+    @SuppressLint("RestrictedApi")
+    private fun handleSignInError(response : IdpResponse?) {
+        val view = window.decorView.rootView
+        if (response == null){
+            showSnackMessage(view, "Cancelled")
+        }else{
+            showSnackMessage(view, ErrorCodes.toFriendlyMessage(response.error!!.errorCode))
+        }
     }
 }
