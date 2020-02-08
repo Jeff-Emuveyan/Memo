@@ -8,7 +8,9 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -53,18 +55,16 @@ class MainActivity : AppCompatActivity() {
 
         //we place a listener to know when the user has signed out:
         //This will trigger anytime the user sign out. Successfully or not.
-        val firebaseAuth = FirebaseAuth.getInstance()
-        firebaseAuth.addAuthStateListener {
-            val user = it.currentUser
+        viewModel.listenForUserSignOut(this)
 
-            if (user == null){//user has logged out:
-                //change UI for logout/no user
-                Snackbar.make(window.decorView.rootView, "Done", Snackbar.LENGTH_LONG).show()
-
+        viewModel.user.observe(this@MainActivity, Observer {
+            if (it == null){
+                Log.e("User state", "User signed Out")
             }else{
-                Log.e("User state", "There is user")
+                Log.e("User state", "Already signed in")
             }
-        }
+
+        })
     }
 
 
@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                 launchFirebaseAuthentication()
             }
             R.id.sign_out ->{
-               viewModel.signOut(this@MainActivity)
+                viewModel.signOut(this@MainActivity)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -119,9 +119,9 @@ class MainActivity : AppCompatActivity() {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
             //Log.e(MainActivity::class.java.simpleName, "name: ${user?.displayName!!}  ${user.phoneNumber}  ${user.email} ${user.photoUrl.toString()}")
-            viewModel.userHasLoggedIn.value = true //set the live data
+            viewModel.user.value = user //set the live data
         } else {
-            viewModel.userHasLoggedIn.value = false //set the live data
+            viewModel.user.value = null//set the live data
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
             // response.getError().getErrorCode() and handle the error.

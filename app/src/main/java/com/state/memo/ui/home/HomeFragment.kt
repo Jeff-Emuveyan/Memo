@@ -1,6 +1,7 @@
 package com.state.memo.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,12 +39,12 @@ class HomeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mainViewModel =  ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
-        mainViewModel.userHasLoggedIn.observe(viewLifecycleOwner,  Observer {
-            if (it){
-                textView.text = "yes"
+        mainViewModel =  ViewModelProviders.of(activity!!).get(MainActivityViewModel::class.java)
+        mainViewModel.user.observe(viewLifecycleOwner,Observer {
+            if (it == null){
+               textView.text = "No user"
             }else{
-                textView.text = "nnnn"
+                textView.text = "There is user"
             }
 
         })
