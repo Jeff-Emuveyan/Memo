@@ -1,7 +1,6 @@
 package com.state.memo.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.state.memo.R
 import com.state.memo.ui.MainActivityViewModel
+import com.state.memo.ui.post.CreatePostBottomSheet
+import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {
 
@@ -35,6 +36,10 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        floatingActionButton.setOnClickListener {
+            CreatePostBottomSheet.show(activity!!.supportFragmentManager, "")
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
