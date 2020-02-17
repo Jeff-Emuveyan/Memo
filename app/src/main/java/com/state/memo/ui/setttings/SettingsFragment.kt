@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.state.memo.R
+import com.state.memo.util.Repository
 
 class SettingsFragment : Fragment() {
 
@@ -34,10 +35,7 @@ class SettingsFragment : Fragment() {
 
         //check if there is a user account in the database
         context?.let {
-            val user = settingsViewModel.getUser(it).value
-            if(user == null){
-
-            }
+            val user =  Repository(context!!).getUser(1)
 
         }
     }

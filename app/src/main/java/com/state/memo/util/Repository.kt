@@ -9,16 +9,54 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.state.memo.database.room.AppDatabase
 import com.state.memo.model.User
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class Repository(var context: Context) {
 
     private val db = AppDatabase.getDatabase(context)
 
-    val user: LiveData<User> = db.userDao().getUser()
+    /***fetch a user asynchronously ie returns a Livedata**/
+    fun getUser(id: Int) = db.userDao().getUser(id)
 
-    fun listenForUserSignOut(userState: (FirebaseUser?)->Unit) = FirebaseAuth.getInstance().addAuthStateListener {
+    /***fetch a user synchronously ie does not return Livedata**/
+    suspend fun getUserSynchronously(id: Int) = db.userDao().getUserSynchronously(id)
+
+    /***delete**/
+    fun deleteUser(coroutineScope: CoroutineScope, id: Int){
+
+        coroutineScope.launch {
+            val user = getUserSynchronously(id)
+            if (user != null){
+                db.userDao().deleteUser(user)
+            }
+        }
+    }
+
+    fun listenForUserSignOut(userState: (FirebaseUser?)->Unit) =
+        FirebaseAuth.getInstance().addAuthStateListener {
         userState.invoke(it.currentUser)
     }
+
+
+    /**saves user locally**/
+    fun saveUser(coroutineScope: CoroutineScope, id: Int, user: FirebaseUser?){
+        user?.let {
+            coroutineScope.launch {
+                val newUser = User(id,
+                    User.Type.PARENT, user.displayName ?: "You", user.email!!, user.photoUrl?.toString())
+
+                val oldUser = getUserSynchronously(id)
+                if (oldUser == null){
+                    db.userDao().saveUser(newUser)
+                }else{
+                    db.userDao().updateUser(newUser)
+                }
+
+            }
+        }
+    }
+
 
 
     fun signOut(){

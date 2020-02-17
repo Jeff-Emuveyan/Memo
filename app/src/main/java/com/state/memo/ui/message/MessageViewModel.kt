@@ -8,5 +8,4 @@ import com.state.memo.model.User
 
 class MessageViewModel : ViewModel() {
 
-    fun getUser(context: Context): LiveData<User> = Repository(context).user
 }

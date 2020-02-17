@@ -7,6 +7,4 @@ import com.state.memo.util.Repository
 import com.state.memo.model.User
 
 class SettingsViewModel : ViewModel() {
-
-    fun getUser(context: Context): LiveData<User> = Repository(context).user
 }

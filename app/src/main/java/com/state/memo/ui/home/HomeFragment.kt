@@ -11,12 +11,12 @@ import androidx.lifecycle.ViewModelProviders
 import com.state.memo.R
 import com.state.memo.ui.MainActivityViewModel
 import com.state.memo.ui.post.CreatePostBottomSheet
+import com.state.memo.util.Repository
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var mainViewModel: MainActivityViewModel
     private lateinit var textView: TextView
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,8 +44,7 @@ class HomeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mainViewModel =  ViewModelProviders.of(activity!!).get(MainActivityViewModel::class.java)
-        mainViewModel.user.observe(viewLifecycleOwner,Observer {
+        Repository(context!!).getUser(1).observe(viewLifecycleOwner,Observer {
             if (it == null){
                textView.text = "No user"
             }else{

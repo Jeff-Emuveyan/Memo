@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -24,6 +25,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.state.memo.R
+import com.state.memo.util.Repository
 import com.state.memo.util.showSnackMessage
 
 
@@ -56,15 +58,6 @@ class MainActivity : AppCompatActivity() {
         //we place a listener to know when the user has signed out:
         //This will trigger anytime the user sign out. Successfully or not.
         viewModel.listenForUserSignOut(this)
-
-        viewModel.user.observe(this@MainActivity, Observer {
-            if (it == null){
-                Log.e("User state", "User signed Out")
-            }else{
-                Log.e("User state", "Already signed in")
-            }
-
-        })
     }
 
 
@@ -118,10 +111,13 @@ class MainActivity : AppCompatActivity() {
         if (resultCode == Activity.RESULT_OK) {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
-            //Log.e(MainActivity::class.java.simpleName, "name: ${user?.displayName!!}  ${user.phoneNumber}  ${user.email} ${user.photoUrl.toString()}")
-            viewModel.user.value = user //set the live data
+            Log.e(MainActivity::class.java.simpleName, "name: ${user?.displayName ?: "You"}" +
+                    "  ${user?.phoneNumber} " +
+                    " ${user?.email} " +
+                    "${user?.photoUrl?.toString()}")
+            //finally save the user:
+            Repository(this).saveUser(lifecycleScope, 1, user)
         } else {
-            viewModel.user.value = null//set the live data
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
             // response.getError().getErrorCode() and handle the error.
