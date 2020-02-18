@@ -3,4 +3,22 @@
     <string name="title_home">Home</string>
     <string name="title_message">Message</string>
     <string name="title_settings">Settings</string>
+    <string name="feature_restriction_message">Sign up or login to access Private messaging</string>
+    <string name="feature_restriction_setting">Sign up or login to see your settings</string>
+    <string name="share">Share</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_out">Sign out</string>
+    <string name="about">About</string>
+    <string name="signup">Sign up / Sign in</string>
+    <string name="user_name">USER NAME</string>
+    <string name="user_email">USER EMAIL</string>
+    <string name="click_here">Click Here</string>
+    <string name="forgot_your_password">Forgot Your Password?</string>
+    <string name="sign_up">Sign up</string>
+    <string name="password">PASSWORD</string>
+    <string name="write_a_post">Write a post</string>
+    <string name="say_something_here">Say something here (200 characters)</string>
+    <string name="attach_image">Attach image</string>
+    <string name="attach_video">Attach video</string>
+    <string name="post">Post</string>
 </resources>
