@@ -14,10 +14,22 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.debug
 
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+
+        android.applicationVariants.all { variant ->
+
+            def formattedDate = new Date().format('ddMMyyyy-(hh-mm a)')
+            def flavor = variant.flavorName
+
+            variant.outputs.all { output ->
+                def fileName = "Memo" + "-" + defaultConfig.versionName + "-" + formattedDate + "-" + flavor + ".apk"
+                outputFileName = new File(".", fileName)
             }
         }
     }
@@ -27,6 +39,7 @@ android {
             shrinkResources true
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            multiDexEnabled = true
         }
 
         debug {
@@ -34,6 +47,23 @@ android {
             minifyEnabled false
             shrinkResources false
             debuggable true
+        }
+    }
+
+
+    signingConfigs {
+        release {
+            keyAlias 'key0'
+            keyPassword 'jeff2468JEFF'
+            storeFile file('/home/jeff/StudioProjects/Memo/app/memo.jks')
+            storePassword 'jeff2468JEFF'
+        }
+
+        debug {
+            keyAlias 'key0'
+            keyPassword 'jeff2468JEFF'
+            storeFile file('/home/jeff/StudioProjects/Memo/app/memo.jks')
+            storePassword 'jeff2468JEFF'
         }
     }
 
