@@ -1,7 +1,7 @@
-package com.state.memo.ui.signin
+package com.state.memo.ui.post
 
 import androidx.lifecycle.ViewModel
 
-class SignUpViewModel : ViewModel() {
+class CreatePostViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 }

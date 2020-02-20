@@ -1,4 +1,4 @@
-package com.state.memo.ui.signin
+package com.state.memo.ui.post
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -9,25 +9,25 @@ import android.view.ViewGroup
 
 import com.state.memo.R
 
-class SignUpFragment : Fragment() {
+class CreatePostFragment : Fragment() {
 
     companion object {
-        fun newInstance() = SignUpFragment()
+        fun newInstance() = CreatePostFragment()
     }
 
-    private lateinit var viewModel: SignUpViewModel
+    private lateinit var viewModel: CreatePostViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.sign_up_fragment, container, false)
+        return inflater.inflate(R.layout.create_post_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(SignUpViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(CreatePostViewModel::class.java)
+        // TODO: Use the ViewModel
     }
-
 
 }

@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.state.memo.R
 import com.state.memo.ui.MainActivityViewModel
 import com.state.memo.ui.post.CreatePostBottomSheet
@@ -38,7 +39,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         floatingActionButton.setOnClickListener {
-            CreatePostBottomSheet.show(activity!!.supportFragmentManager, "")
+            findNavController().navigate(R.id.action_navigation_home_to_writePostFragment)
         }
     }
 
