@@ -32,7 +32,7 @@
         app:srcCompat="@drawable/ic_create" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/menuIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"

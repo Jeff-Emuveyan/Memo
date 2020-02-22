@@ -65,12 +65,12 @@ class Repository(var context: Context) {
 
     fun signOut(){
         AuthUI.getInstance().signOut(context).addOnCompleteListener {
-            //this call will cause addAuthStateListener() in MainActivity to trigger.
+            //this call will cause listenForUserSignOut in MainActivity to trigger.
             if (it.isSuccessful){
                 Log.e("User state", "Signed Out")
             }
         }.addOnFailureListener {
-            //this call will cause addAuthStateListener()  in MainActivity to trigger.
+            //this call will cause listenForUserSignOut in MainActivity to trigger.
             Log.e("User state", "Signed Out failed")
         }
     }
