@@ -111,10 +111,16 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.0-alpha04'
 
     // Room components
-    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
-    implementation "androidx.room:room-ktx:$rootProject.roomVersion"
+    implementation ("androidx.room:room-runtime:$rootProject.roomVersion"){
+        exclude group: 'com.google.code.gson'
+    }
+    implementation ("androidx.room:room-ktx:$rootProject.roomVersion"){
+        exclude group: 'com.google.code.gson'
+    }
     kapt "androidx.room:room-compiler:$rootProject.roomVersion"
-    androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
+    androidTestImplementation ("androidx.room:room-testing:$rootProject.roomVersion"){
+        exclude group: 'com.google.code.gson'
+    }
 
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.lifecycleVersion"
@@ -128,4 +134,5 @@ dependencies {
 
     //Firebase Auth UI
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+    implementation 'com.google.firebase:firebase-firestore:21.4.0'
 }

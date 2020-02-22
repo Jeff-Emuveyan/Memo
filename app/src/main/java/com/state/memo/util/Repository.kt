@@ -8,7 +8,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.state.memo.database.room.AppDatabase
+import com.state.memo.model.Post
 import com.state.memo.model.User
+import com.state.memo.network.NetworkHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -72,4 +74,7 @@ class Repository(var context: Context) {
             Log.e("User state", "Signed Out failed")
         }
     }
+
+
+    fun postData(post: Post): PostStatus = NetworkHelper.upload(post)
 }

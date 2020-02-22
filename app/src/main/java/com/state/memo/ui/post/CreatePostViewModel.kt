@@ -14,6 +14,8 @@ class CreatePostViewModel : ViewModel() {
         if(collectAndValidateData(data)){
             val user = Repository(context!!).getUserSynchronously(1)
             val post = Post(user, data, System.currentTimeMillis())
+            val postStatus = Repository(context!!).postData(post)
+            status.invoke(postStatus)
         }else{
            status.invoke(PostStatus.INVALID_INPUT)
         }
