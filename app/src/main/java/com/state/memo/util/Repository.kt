@@ -16,10 +16,13 @@ class Repository(var context: Context) {
 
     private val db = AppDatabase.getDatabase(context)
 
-    /***fetch a user asynchronously ie returns a Livedata**/
+    /***fetch a user asynchronously ie returns a Livedata so there is no need to make it suspend.
+     * It is already asynchronous**/
     fun getUser(id: Int) = db.userDao().getUser(id)
 
-    /***fetch a user synchronously ie does not return Livedata**/
+
+    /***fetch a user synchronously ie does not return Livedata. Room won't let us read data synchronously,
+     *So we must either return a LiveData which will do the async work or make this function suspend**/
     suspend fun getUserSynchronously(id: Int) = db.userDao().getUserSynchronously(id)
 
     /***delete**/
@@ -56,7 +59,6 @@ class Repository(var context: Context) {
             }
         }
     }
-
 
 
     fun signOut(){
