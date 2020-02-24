@@ -1,28 +1,17 @@
 package com.state.memo.network
 
-import android.content.ContentValues.TAG
-import android.util.Log
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.state.memo.model.Post
 import com.state.memo.util.POST
-import com.state.memo.util.PostStatus
 
 
 object NetworkHelper {
 
 
-    fun upload(post: Post): PostStatus{
+    fun upload(post: Post): Task<DocumentReference>{
         val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-        val documentReference = db.collection(POST).add(post).result
-        return try {
-            if(documentReference != null){
-                PostStatus.SUCCESSFUL
-            }else{
-                PostStatus.FAILED
-            }
-        } catch (e: Exception) {
-            PostStatus.FAILED
-        }
+        return db.collection(POST).add(post)
     }
 }

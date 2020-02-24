@@ -1,25 +1,23 @@
 package com.state.memo.ui.post
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.state.memo.model.Data
 import com.state.memo.model.Post
+import com.state.memo.util.POST
 import com.state.memo.util.PostStatus
 import com.state.memo.util.Repository
 
 class CreatePostViewModel : ViewModel() {
 
-    suspend fun post(context: Context, data: Data, status: (PostStatus)-> Unit){
-
-        if(collectAndValidateData(data)){
-            val user = Repository(context!!).getUserSynchronously(1)
-            val post = Post(user, data, System.currentTimeMillis())
-            val postStatus = Repository(context!!).postData(post)
-            status.invoke(postStatus)
-        }else{
-           status.invoke(PostStatus.INVALID_INPUT)
-        }
-
+    suspend fun post(context: Context, data: Data): Task<DocumentReference>{
+        val user = Repository(context!!).getUserSynchronously(1)
+        val post = Post(user, data, System.currentTimeMillis())
+        return Repository(context!!).postData(post)
     }
 
 

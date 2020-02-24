@@ -53,7 +53,7 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         menuIcon.setOnClickListener{
-            val popup = PopupMenu(context!!, view)
+            val popup = PopupMenu(context!!, it)
             popup.setOnMenuItemClickListener(this)
             popup.inflate(R.menu.toolbar_menu)
             popup.show()

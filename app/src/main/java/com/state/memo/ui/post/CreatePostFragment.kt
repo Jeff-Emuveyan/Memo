@@ -3,21 +3,26 @@ package com.state.memo.ui.post
 import android.content.Context
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 
 import com.state.memo.R
 import com.state.memo.model.Data
 import com.state.memo.model.Post
+import com.state.memo.model.User
+import com.state.memo.util.POST
 import com.state.memo.util.PostStatus
 import com.state.memo.util.Repository
 import com.state.memo.util.showSnackMessage
 import kotlinx.android.synthetic.main.create_post_fragment.*
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class CreatePostFragment : Fragment() {
 
@@ -44,24 +49,31 @@ class CreatePostFragment : Fragment() {
 
 
         postButton.setOnClickListener{
+            val data = Data(editText.text.toString(), imagePath, videoPath)
+            postData(lifecycleScope, data)
+        }
+    }
 
-            val textMessage = editText.text.toString()
-            val data = Data(textMessage, imagePath, videoPath)
 
-            lifecycleScope.launch {
-                postData(context!!, data)
+    private fun postData(coroutineScope: CoroutineScope, data: Data){
+        coroutineScope.launch(Dispatchers.Main) {
+            val task = withContext(Dispatchers.IO){
+                viewModel.post(context!!, data)
+            }
+            handleResult(task)
+        }
+    }
+
+    private fun handleResult(task: Task<DocumentReference>) {
+        task.addOnCompleteListener{
+            if(it.isSuccessful){
+                showSnackMessage(activity!!.window!!.decorView, "Done!")
+            }else{
+                showSnackMessage(activity!!.window!!.decorView, "Failed to upload, try again")
             }
         }
     }
 
 
-    suspend fun postData(context: Context, data: Data){
-        viewModel.post(context, data){
-            when (it){
-                PostStatus.INVALID_INPUT -> showSnackMessage(activity!!.window!!.decorView, "Invalid Input")
-                PostStatus.SUCCESSFUL -> showSnackMessage(activity!!.window!!.decorView, "Done!")
-                PostStatus.FAILED -> showSnackMessage(activity!!.window!!.decorView, "Failed to upload, try again")
-            }
-        }
-    }
+
 }

@@ -4,9 +4,11 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentReference
 import com.state.memo.database.room.AppDatabase
 import com.state.memo.model.Post
 import com.state.memo.model.User
@@ -76,5 +78,6 @@ class Repository(var context: Context) {
     }
 
 
-    fun postData(post: Post): PostStatus = NetworkHelper.upload(post)
+    fun postData(post: Post): Task<DocumentReference> = NetworkHelper.upload(post)
+
 }
