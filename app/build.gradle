@@ -55,14 +55,14 @@ android {
         release {
             keyAlias 'key0'
             keyPassword 'jeff2468JEFF'
-            storeFile file('/home/jeff/StudioProjects/Memo/app/memo.jks')
+            storeFile file('C:\\Users\\SEAMFIX\\AndroidStudioProjects\\Memo\\app\\memo.jks')
             storePassword 'jeff2468JEFF'
         }
 
         debug {
             keyAlias 'key0'
             keyPassword 'jeff2468JEFF'
-            storeFile file('/home/jeff/StudioProjects/Memo/app/memo.jks')
+            storeFile file('C:\\Users\\SEAMFIX\\AndroidStudioProjects\\Memo\\app\\memo.jks')
             storePassword 'jeff2468JEFF'
         }
     }
