@@ -22,7 +22,8 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.state.memo.R
 import com.state.memo.ui.MainActivity
-import com.state.memo.util.Repository
+import com.state.memo.data.BaseRepository
+import com.state.memo.data.home.HomeRepository
 import com.state.memo.util.showSnackMessage
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -66,7 +67,7 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Repository(context!!).getUser(1).observe(viewLifecycleOwner,Observer {
+        HomeRepository(context!!).getUser(1).observe(viewLifecycleOwner,Observer {
             if (it == null){
                textView.text = "No user"
             }else{
@@ -123,7 +124,7 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                         " ${user?.email} " +
                         "${user?.photoUrl?.toString()}")
             //finally save the user:
-            Repository(context!!).saveUser(lifecycleScope, 1, user)
+            HomeRepository(context!!).saveUser(lifecycleScope, 1, user)
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check

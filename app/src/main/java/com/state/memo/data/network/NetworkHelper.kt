@@ -1,4 +1,4 @@
-package com.state.memo.network
+package com.state.memo.data.network
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference

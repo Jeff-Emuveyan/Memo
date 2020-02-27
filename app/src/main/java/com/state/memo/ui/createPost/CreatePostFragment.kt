@@ -1,9 +1,7 @@
-package com.state.memo.ui.post
+package com.state.memo.ui.createPost
 
-import android.content.Context
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,15 +9,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
 
 import com.state.memo.R
 import com.state.memo.model.Data
-import com.state.memo.model.Post
-import com.state.memo.model.User
-import com.state.memo.util.POST
-import com.state.memo.util.PostStatus
-import com.state.memo.util.Repository
 import com.state.memo.util.showSnackMessage
 import kotlinx.android.synthetic.main.create_post_fragment.*
 import kotlinx.coroutines.*

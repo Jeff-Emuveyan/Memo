@@ -1,11 +1,11 @@
-package com.state.memo.database.room
+package com.state.memo.data.database.room
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.state.memo.database.room.dao.UserDao
+import com.state.memo.data.database.room.dao.UserDao
 import com.state.memo.model.User
 import com.state.memo.util.Converters
 

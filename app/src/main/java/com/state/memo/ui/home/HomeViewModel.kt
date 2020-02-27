@@ -5,7 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.firebase.ui.auth.AuthUI
-import com.state.memo.util.Repository
+import com.state.memo.data.BaseRepository
+import com.state.memo.data.home.HomeRepository
 
 class HomeViewModel : ViewModel() {
 
@@ -21,6 +22,6 @@ class HomeViewModel : ViewModel() {
 
 
     fun signOut(context: Context){
-        Repository(context).signOut()
+        HomeRepository(context).signOut()
     }
 }
