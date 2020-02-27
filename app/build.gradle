@@ -77,7 +77,6 @@ android {
     }
 
 
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -111,14 +110,14 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.0-alpha04'
 
     // Room components
-    implementation ("androidx.room:room-runtime:$rootProject.roomVersion"){
+    implementation("androidx.room:room-runtime:$rootProject.roomVersion") {
         exclude group: 'com.google.code.gson'
     }
-    implementation ("androidx.room:room-ktx:$rootProject.roomVersion"){
+    implementation("androidx.room:room-ktx:$rootProject.roomVersion") {
         exclude group: 'com.google.code.gson'
     }
     kapt "androidx.room:room-compiler:$rootProject.roomVersion"
-    androidTestImplementation ("androidx.room:room-testing:$rootProject.roomVersion"){
+    androidTestImplementation("androidx.room:room-testing:$rootProject.roomVersion") {
         exclude group: 'com.google.code.gson'
     }
 

@@ -32,7 +32,7 @@
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/writePostFragment"
-        android:name="com.state.memo.ui.createPost.CreatePostFragment"
+        android:name="com.state.memo.ui.createpost.CreatePostFragment"
         android:label="write_post_fragment"
         tools:layout="@layout/create_post_fragment" />
 </navigation>

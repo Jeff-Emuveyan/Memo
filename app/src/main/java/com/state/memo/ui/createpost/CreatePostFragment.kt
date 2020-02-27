@@ -1,4 +1,4 @@
-package com.state.memo.ui.createPost
+package com.state.memo.ui.createpost
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.state.memo.ui.createPost
+package com.state.memo.ui.createpost
 
 import android.os.Bundle
 import android.view.LayoutInflater

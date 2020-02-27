@@ -1,4 +1,4 @@
-package com.state.memo.ui.createPost
+package com.state.memo.ui.createpost
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -6,7 +6,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.state.memo.model.Data
 import com.state.memo.model.Post
-import com.state.memo.data.BaseRepository
 import com.state.memo.data.createPost.CreatePostRepository
 
 class CreatePostViewModel : ViewModel() {
