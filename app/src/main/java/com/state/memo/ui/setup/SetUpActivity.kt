@@ -31,6 +31,7 @@ class SetUpActivity : AppCompatActivity() {
 
     fun fetchAdmin() = viewModel.fetchAdmin(this, fectched = {
         startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }, failed = {
         tvTryAgain.visibility = View.VISIBLE
     })
