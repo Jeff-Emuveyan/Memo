@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.firebase.ui.auth.AuthUI
 import com.state.memo.data.BaseRepository
 import com.state.memo.data.home.HomeRepository
+import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
 
@@ -23,5 +25,10 @@ class HomeViewModel : ViewModel() {
 
     fun signOut(context: Context){
         HomeRepository(context).signOut()
+    }
+
+
+    suspend fun isUserAdmin(context: Context): Boolean{
+        return HomeRepository(context).isUserAdmin()
     }
 }

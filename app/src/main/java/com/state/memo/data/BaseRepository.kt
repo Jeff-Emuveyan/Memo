@@ -16,19 +16,20 @@ import kotlinx.coroutines.launch
 
 abstract class BaseRepository(var context: Context) {
 
-    private val db = AppDatabase.getDatabase(context)
+    val db = AppDatabase.getDatabase(context)
 
     /***fetch a user asynchronously ie returns a Livedata so there is no need to make it suspend.
      * It is already asynchronous**/
     fun getUser(id: Int) = db.userDao().getUser(id)
 
+
     /***fetch a user synchronously ie does not return Livedata. Room won't let us read data synchronously,
      *So we must either return a LiveData which will do the async work or make this function suspend**/
     suspend fun getUserSynchronously(id: Int) = db.userDao().getUserSynchronously(id)
 
+
     /***delete**/
     fun deleteUser(coroutineScope: CoroutineScope, id: Int){
-
         coroutineScope.launch {
             val user = getUserSynchronously(id)
             if (user != null){
@@ -62,6 +63,24 @@ abstract class BaseRepository(var context: Context) {
 
             }
         }
+    }
+
+
+    /**Determines if the current user is an Admin
+     * **/
+    suspend fun isUserAdmin(): Boolean{
+        //get the current user:
+        val currentUser = getUserSynchronously(1)
+
+        //get the list of admin emails:
+        val admin = db.adminDao().getAdminSynchronously(1)
+
+        if(admin?.users != null && admin.users.isNotEmpty() && currentUser?.email != null) {
+            for (email in admin.users){
+                return (currentUser.email == email)
+            }
+        }
+        return false
     }
 
 }

@@ -26,6 +26,7 @@ import com.state.memo.data.BaseRepository
 import com.state.memo.data.home.HomeRepository
 import com.state.memo.util.showSnackMessage
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.launch
 
 const val  RC_SIGN_IN: Int = 44
 
@@ -62,6 +63,15 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
         floatingActionButton.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_writePostFragment)
+        }
+
+        //hide the 'create post' button if the user is not Admin:
+        lifecycleScope.launch {
+            if(!homeViewModel.isUserAdmin(context!!)){
+                floatingActionButton.visibility = View.INVISIBLE
+            }else{
+                floatingActionButton.visibility = View.VISIBLE
+            }
         }
     }
 
