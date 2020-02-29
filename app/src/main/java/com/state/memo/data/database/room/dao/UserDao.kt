@@ -1,4 +1,4 @@
-package com.state.memo.database.room.dao
+package com.state.memo.data.database.room.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

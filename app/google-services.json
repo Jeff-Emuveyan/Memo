@@ -52,6 +52,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "57631981796-4j3anl2u143p1di95ldr5oarvlj19mgv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.state.memo.debug",
+            "certificate_hash": "3f1b2710a99d20eb932b9f6c28df5a84e227dd6f"
+          }
+        },
+        {
           "client_id": "57631981796-lo7fg6e15m722r7ptjtdmfagtr6mptj9.apps.googleusercontent.com",
           "client_type": 3
         }

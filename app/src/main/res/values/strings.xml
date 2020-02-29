@@ -17,8 +17,9 @@
     <string name="sign_up">Sign up</string>
     <string name="password">PASSWORD</string>
     <string name="write_a_post">Write a post</string>
-    <string name="say_something_here">Say something here (200 characters)</string>
+    <string name="say_something_here">Say something here</string>
     <string name="attach_image">Attach image</string>
     <string name="attach_video">Attach video</string>
     <string name="post">Post</string>
+    <string name="network_failure_tap_to_try_again">Network failure, Tap to try again.</string>
 </resources>

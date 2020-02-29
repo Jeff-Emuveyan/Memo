@@ -55,14 +55,14 @@ android {
         release {
             keyAlias 'key0'
             keyPassword 'jeff2468JEFF'
-            storeFile file('/home/jeff/StudioProjects/Memo/app/memo.jks')
+            storeFile file('C:\\Users\\SEAMFIX\\AndroidStudioProjects\\Memo\\app\\memo.jks')
             storePassword 'jeff2468JEFF'
         }
 
         debug {
             keyAlias 'key0'
             keyPassword 'jeff2468JEFF'
-            storeFile file('/home/jeff/StudioProjects/Memo/app/memo.jks')
+            storeFile file('C:\\Users\\SEAMFIX\\AndroidStudioProjects\\Memo\\app\\memo.jks')
             storePassword 'jeff2468JEFF'
         }
     }
@@ -75,7 +75,6 @@ android {
 
         }
     }
-
 
 
     compileOptions {
@@ -93,7 +92,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.2.0'
-    implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.navigation:navigation-fragment:2.2.1'
     implementation 'androidx.navigation:navigation-ui:2.2.1'
@@ -108,11 +106,20 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
 
+    //material
+    implementation 'com.google.android.material:material:1.2.0-alpha04'
+
     // Room components
-    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
-    implementation "androidx.room:room-ktx:$rootProject.roomVersion"
+    implementation("androidx.room:room-runtime:$rootProject.roomVersion") {
+        exclude group: 'com.google.code.gson'
+    }
+    implementation("androidx.room:room-ktx:$rootProject.roomVersion") {
+        exclude group: 'com.google.code.gson'
+    }
     kapt "androidx.room:room-compiler:$rootProject.roomVersion"
-    androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
+    androidTestImplementation("androidx.room:room-testing:$rootProject.roomVersion") {
+        exclude group: 'com.google.code.gson'
+    }
 
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.lifecycleVersion"
@@ -126,4 +133,8 @@ dependencies {
 
     //Firebase Auth UI
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+    implementation 'com.google.firebase:firebase-firestore:21.4.0'
+
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.6'
 }

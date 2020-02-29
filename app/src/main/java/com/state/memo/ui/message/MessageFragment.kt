@@ -1,16 +1,14 @@
 package com.state.memo.ui.message
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.state.memo.R
-import com.state.memo.util.Repository
+import com.state.memo.data.BaseRepository
 
 class MessageFragment : Fragment() {
 
@@ -30,11 +28,5 @@ class MessageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        //check if there is a user account in the database
-        context?.let {
-            val user =  Repository(context!!).getUser(1)
-
-        }
     }
 }
