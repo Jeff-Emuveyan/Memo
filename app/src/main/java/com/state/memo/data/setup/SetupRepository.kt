@@ -20,7 +20,15 @@ class SetupRepository(var cxt: Context): BaseRepository(cxt){
 
     fun saveAdmin(coroutineScope: CoroutineScope, admin: Admin){
         coroutineScope.launch(Dispatchers.IO) {
-            db.adminDao().saveAdmin(admin)
+
+            val oldAdmin = db.adminDao().getAdminSynchronously(1)
+
+            if(oldAdmin == null){
+                db.adminDao().saveAdmin(admin)
+            }else{
+                db.adminDao().updateAdmin(admin)
+            }
+
         }
     }
 }
