@@ -77,7 +77,9 @@ abstract class BaseRepository(var context: Context) {
 
         if(admin?.users != null && admin.users.isNotEmpty() && currentUser?.email != null) {
             for (email in admin.users){
-                return (currentUser.email == email)
+               if(currentUser.email == email){
+                   return true
+               }
             }
         }
         return false
