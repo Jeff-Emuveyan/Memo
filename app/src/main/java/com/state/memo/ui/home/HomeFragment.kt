@@ -22,7 +22,6 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.state.memo.R
 import com.state.memo.ui.MainActivity
-import com.state.memo.data.BaseRepository
 import com.state.memo.data.home.HomeRepository
 import com.state.memo.util.showSnackMessage
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -64,15 +63,6 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         floatingActionButton.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_writePostFragment)
         }
-
-        //hide the 'create post' button if the user is not Admin:
-        lifecycleScope.launch {
-            if(!homeViewModel.isUserAdmin(context!!)){
-                floatingActionButton.visibility = View.INVISIBLE
-            }else{
-                floatingActionButton.visibility = View.VISIBLE
-            }
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -83,7 +73,7 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             }else{
                 textView.text = "There is user"
             }
-
+            controlAdminPrivileges()
         })
     }
 
@@ -135,6 +125,7 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                         "${user?.photoUrl?.toString()}")
             //finally save the user:
             HomeRepository(context!!).saveUser(lifecycleScope, 1, user)
+            controlAdminPrivileges()
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
@@ -142,6 +133,20 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             handleSignInError(response)
         }
     }
+
+
+
+    private fun controlAdminPrivileges() {
+        //hide the 'create post' button if the user is not Admin:
+        lifecycleScope.launch {
+            if(!homeViewModel.isUserAdmin(context!!)){
+                floatingActionButton.visibility = View.INVISIBLE
+            }else{
+                floatingActionButton.visibility = View.VISIBLE
+            }
+        }
+    }
+
 
     @SuppressLint("RestrictedApi")
     private fun handleSignInError(response : IdpResponse?) {

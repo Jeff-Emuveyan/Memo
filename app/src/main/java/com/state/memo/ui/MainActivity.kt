@@ -8,6 +8,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseApp
 import com.state.memo.R
 
@@ -41,7 +42,8 @@ class MainActivity : AppCompatActivity() {
 
         FirebaseApp.initializeApp(this)
 
-        //we place a constant listener to know when the user has signed out:
+        //we place a constant listener to know when the user has signed out,
+        // So that we can know when to delete the user from db
         //This will trigger anytime the user sign out. Successfully or not.
         viewModel.listenForUserSignOut(this)
     }
