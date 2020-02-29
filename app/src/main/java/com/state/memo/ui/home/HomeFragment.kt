@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.state.memo.R
 import com.state.memo.ui.MainActivity
@@ -33,20 +34,13 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
 
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var textView: TextView
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
-
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        textView= root.findViewById(R.id.text_home)
-        homeViewModel.text.observe(this, Observer {
-            textView.text = it
-        })
-        return root
+        return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
 
@@ -63,17 +57,26 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         floatingActionButton.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_writePostFragment)
         }
+
+        //fetch the posts:
+        homeViewModel.getPosts(context!!, onFailed = {
+            Snackbar.make(activity?.window!!.decorView, "", Snackbar.LENGTH_LONG).show()
+        })
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         HomeRepository(context!!).getUser(1).observe(viewLifecycleOwner,Observer {
-            if (it == null){
-               textView.text = "No user"
-            }else{
-                textView.text = "There is user"
-            }
             controlAdminPrivileges()
+        })
+
+        homeViewModel.data.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                for(post in it){
+                    Log.e("POST", post.time.toString() + " => " + post.data)
+                }
+            }
         })
     }
 

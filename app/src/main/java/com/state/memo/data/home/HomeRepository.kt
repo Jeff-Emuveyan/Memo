@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.firebase.ui.auth.AuthUI
 import com.state.memo.data.BaseRepository
+import com.state.memo.data.network.NetworkHelper
 
 class HomeRepository(var cxt: Context): BaseRepository(cxt) {
 
@@ -18,4 +19,6 @@ class HomeRepository(var cxt: Context): BaseRepository(cxt) {
             Log.e("User state", "Signed Out failed")
         }
     }
+
+    fun getPosts() = NetworkHelper.getPosts()
 }
