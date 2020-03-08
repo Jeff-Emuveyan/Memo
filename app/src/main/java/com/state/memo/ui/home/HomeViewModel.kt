@@ -4,18 +4,16 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.firebase.ui.auth.AuthUI
-import com.state.memo.data.BaseRepository
 import com.state.memo.data.home.HomeRepository
-import kotlinx.coroutines.launch
+import com.state.memo.model.Post
+
 
 class HomeViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+    var posts: MutableLiveData<ArrayList<Post>> = MutableLiveData<ArrayList<Post>>().apply {
+        value = null
     }
-    val text: LiveData<String> = _text
 
     /** Choose authentication providers **/
     fun getAuthProviders() = arrayListOf(
@@ -30,5 +28,22 @@ class HomeViewModel : ViewModel() {
 
     suspend fun isUserAdmin(context: Context): Boolean{
         return HomeRepository(context).isUserAdmin()
+    }
+
+
+    fun getPosts(context: Context, onSuccess: ()-> Unit, onFailed: () -> Unit){
+        val listOfPost = ArrayList<Post>()
+        HomeRepository(context).getPosts().addOnCompleteListener {
+            if(it.isSuccessful && it.result != null){
+                for (document in it.result!!) {
+                    val post = document.toObject(Post::class.java)
+                    listOfPost.add(post)
+                }
+                posts.value = listOfPost
+                onSuccess.invoke()
+            }else{
+                onFailed.invoke()
+            }
+        }
     }
 }

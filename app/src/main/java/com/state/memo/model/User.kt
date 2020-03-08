@@ -13,6 +13,9 @@ data class User(@PrimaryKey val id: Int,
                 @ColumnInfo(name = "email") var email: String,
                 @ColumnInfo(name = "profilePicture") var profilePicture: String?){
 
+    constructor(): this(1, Type.PARENT, "", "", "")
+
+
      enum class Type{
          PARENT(),
          SCHOOL()
