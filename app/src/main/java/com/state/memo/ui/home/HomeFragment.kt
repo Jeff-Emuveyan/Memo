@@ -2,6 +2,7 @@ package com.state.memo.ui.home
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,13 +10,13 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
@@ -24,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.state.memo.R
 import com.state.memo.ui.MainActivity
 import com.state.memo.data.home.HomeRepository
+import com.state.memo.model.Post
 import com.state.memo.util.showSnackMessage
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.launch
@@ -34,6 +36,8 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
 
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var postListAdapter: PostListAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -59,8 +63,10 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
 
         //fetch the posts:
-        homeViewModel.getPosts(context!!, onFailed = {
-            Snackbar.make(activity?.window!!.decorView, "", Snackbar.LENGTH_LONG).show()
+        homeViewModel.getPosts(context!!,onSuccess = {
+            progressBar.visibility = View.GONE
+        },  onFailed = {
+            Snackbar.make(activity?.window!!.decorView, "Something went wrong...", Snackbar.LENGTH_LONG).show()
         })
 
     }
@@ -71,13 +77,19 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             controlAdminPrivileges()
         })
 
-        homeViewModel.data.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                for(post in it){
-                    Log.e("POST", post.time.toString() + " => " + post.data)
-                }
-            }
+        //listen for posts:
+        homeViewModel.posts.observe(viewLifecycleOwner, Observer {
+            handlePosts(it)
         })
+    }
+
+
+    private fun handlePosts(posts: ArrayList<Post>?){
+        if(posts != null && posts.isNotEmpty()){
+            for(post in posts){
+                displayPost(context!!, posts)
+            }
+        }
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
@@ -160,5 +172,13 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             showSnackMessage(view!!, ErrorCodes.toFriendlyMessage(response.error!!.errorCode))
         }
     }
+
+
+    private fun displayPost(context: Context, listOfPost: ArrayList<Post>){
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        postListAdapter = PostListAdapter(context!!, listOfPost)
+        recyclerView.adapter = postListAdapter
+    }
+
 
 }

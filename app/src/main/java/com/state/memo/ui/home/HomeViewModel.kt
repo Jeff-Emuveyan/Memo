@@ -1,7 +1,6 @@
 package com.state.memo.ui.home
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,12 +11,7 @@ import com.state.memo.model.Post
 
 class HomeViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
-    }
-    val text: LiveData<String> = _text
-
-    var data: MutableLiveData<ArrayList<Post>> = MutableLiveData<ArrayList<Post>>().apply {
+    var posts: MutableLiveData<ArrayList<Post>> = MutableLiveData<ArrayList<Post>>().apply {
         value = null
     }
 
@@ -37,7 +31,7 @@ class HomeViewModel : ViewModel() {
     }
 
 
-    fun getPosts(context: Context, onFailed: () -> Unit){
+    fun getPosts(context: Context, onSuccess: ()-> Unit, onFailed: () -> Unit){
         val listOfPost = ArrayList<Post>()
         HomeRepository(context).getPosts().addOnCompleteListener {
             if(it.isSuccessful && it.result != null){
@@ -45,7 +39,8 @@ class HomeViewModel : ViewModel() {
                     val post = document.toObject(Post::class.java)
                     listOfPost.add(post)
                 }
-                data.value = listOfPost
+                posts.value = listOfPost
+                onSuccess.invoke()
             }else{
                 onFailed.invoke()
             }
