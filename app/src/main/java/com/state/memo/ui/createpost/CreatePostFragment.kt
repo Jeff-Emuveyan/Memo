@@ -38,6 +38,7 @@ class CreatePostFragment : Fragment() {
         viewModel.postStatus.observe(viewLifecycleOwner, Observer {
             if(it == true){
                 showSnackMessage(activity!!.window!!.decorView, "Done!")
+                postingUIState(false)
             }else if(it == false){
                 showSnackMessage(activity!!.window!!.decorView, "Failed to upload, try again")
             }
@@ -48,7 +49,10 @@ class CreatePostFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        postingUIState(false)
+
         postButton.setOnClickListener{
+            it.visibility = View.GONE
             val data = Data(editText.text.toString().trim(), imagePath, videoPath)
             postData(lifecycleScope, data)
         }
@@ -57,13 +61,27 @@ class CreatePostFragment : Fragment() {
 
     private fun postData(coroutineScope: CoroutineScope, data: Data){
         coroutineScope.launch(Dispatchers.Main) {
+            postingUIState(true)
             if(viewModel collectAndValidateData data){
                 withContext(Dispatchers.IO){
                     viewModel.post(context!!, data)
                 }
             }else{
+                postingUIState(false)
                 showSnackMessage(activity!!.window!!.decorView, "Post cannot be empty...")
             }
+        }
+    }
+
+
+    fun postingUIState(state: Boolean){
+        if(state){
+            progressBar.visibility = View.VISIBLE
+            postButton.visibility = View.GONE
+        }else{
+            progressBar.visibility = View.GONE
+            postButton.visibility = View.VISIBLE
+            editText.text.clear()
         }
     }
 
