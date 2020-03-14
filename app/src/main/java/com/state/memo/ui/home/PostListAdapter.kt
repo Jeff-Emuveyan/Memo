@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.state.memo.R
 import com.state.memo.model.Post
+import com.state.memo.util.getTextBackgroundImage
 
 class PostListAdapter private constructor(): RecyclerView.Adapter<PostItem>(){
 
@@ -32,6 +33,7 @@ class PostListAdapter private constructor(): RecyclerView.Adapter<PostItem>(){
         if(postList != null && postList.isNotEmpty()){
             val post = postList[position]
             holder.tvMessage.text = post.data.text
+            holder.ivBanner.setImageResource(getTextBackgroundImage())
         }
     }
 }
