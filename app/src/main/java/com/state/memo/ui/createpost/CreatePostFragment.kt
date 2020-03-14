@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
@@ -33,12 +34,19 @@ class CreatePostFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(CreatePostViewModel::class.java)
+
+        viewModel.postStatus.observe(viewLifecycleOwner, Observer {
+            if(it == true){
+                showSnackMessage(activity!!.window!!.decorView, "Done!")
+            }else if(it == false){
+                showSnackMessage(activity!!.window!!.decorView, "Failed to upload, try again")
+            }
+        })
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         postButton.setOnClickListener{
             val data = Data(editText.text.toString(), imagePath, videoPath)
@@ -49,23 +57,14 @@ class CreatePostFragment : Fragment() {
 
     private fun postData(coroutineScope: CoroutineScope, data: Data){
         coroutineScope.launch(Dispatchers.Main) {
-            val task = withContext(Dispatchers.IO){
-                viewModel.post(context!!, data)
-            }
-            handleResult(task)
-        }
-    }
-
-    private fun handleResult(task: Task<DocumentReference>) {
-        task.addOnCompleteListener{
-            if(it.isSuccessful){
-                showSnackMessage(activity!!.window!!.decorView, "Done!")
+            if(viewModel collectAndValidateData data){
+                withContext(Dispatchers.IO){
+                    viewModel.post(context!!, data)
+                }
             }else{
-                showSnackMessage(activity!!.window!!.decorView, "Failed to upload, try again")
+                showSnackMessage(activity!!.window!!.decorView, "Post cannot be empty...")
             }
         }
     }
-
-
 
 }
