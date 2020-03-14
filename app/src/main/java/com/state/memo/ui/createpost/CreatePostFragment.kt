@@ -49,7 +49,7 @@ class CreatePostFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         postButton.setOnClickListener{
-            val data = Data(editText.text.toString(), imagePath, videoPath)
+            val data = Data(editText.text.toString().trim(), imagePath, videoPath)
             postData(lifecycleScope, data)
         }
     }

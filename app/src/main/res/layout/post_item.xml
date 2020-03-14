@@ -7,34 +7,58 @@
     android:orientation="horizontal"
     android:padding="8dp">
 
+  <TextView
+      android:id="@+id/tvDate"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:fontFamily="@font/lato"
+      android:text="2020-03-14"
+      android:textColor="@color/black"
+      android:textStyle="bold"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
 
   <com.makeramen.roundedimageview.RoundedImageView
       android:id="@+id/ivBanner"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:scaleType="fitCenter"
+      android:src="@drawable/bg1"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      android:src="@drawable/bg1"
-      android:scaleType="fitCenter"
+      app:layout_constraintTop_toBottomOf="@+id/tvDate"
       app:riv_corner_radius="8dip"
       app:riv_mutate_background="true"
       app:riv_tile_mode="repeat" />
 
   <TextView
       android:id="@+id/tvMessage"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginEnd="8dp"
+      android:layout_marginBottom="8dp"
       android:fontFamily="@font/lato_bold"
-      android:text="There will be a weekly parents meeting by 6am today"
-      android:textSize="18sp"
       android:gravity="center"
+      android:text="There will be a weekly parents meeting by 6am today"
       android:textColor="@color/white"
-      app:layout_constraintBottom_toBottomOf="parent"
+      android:textSize="18sp"
+      app:layout_constraintBottom_toBottomOf="@+id/ivBanner"
+      app:layout_constraintEnd_toEndOf="@+id/ivBanner"
+      app:layout_constraintStart_toStartOf="@+id/ivBanner"
+      app:layout_constraintTop_toTopOf="@+id/ivBanner" />
+
+
+  <View
+      android:layout_width="0dp"
+      android:layout_height="0.5dp"
+      android:background="@color/colorPrimaryDark"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
+      app:layout_constraintTop_toBottomOf="@+id/ivBanner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

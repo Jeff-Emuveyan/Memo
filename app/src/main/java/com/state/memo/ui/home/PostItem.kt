@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.post_item.view.*
 
 class PostItem(v: View): RecyclerView.ViewHolder(v) {
 
+    lateinit var tvDate: TextView
     lateinit var tvMessage: TextView
     lateinit var ivBanner: ImageView
     lateinit var context: Context
@@ -18,5 +19,6 @@ class PostItem(v: View): RecyclerView.ViewHolder(v) {
         this.context = context
         tvMessage = v.findViewById(R.id.tvMessage)
         ivBanner = v.findViewById(R.id.ivBanner)
+        tvDate = v.findViewById(R.id.tvDate)
     }
 }
