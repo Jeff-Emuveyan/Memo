@@ -16,6 +16,7 @@ import com.jaiselrahman.filepicker.model.MediaFile
 import com.state.memo.R
 import com.state.memo.model.Data
 import com.state.memo.util.showSnackMessage
+import com.state.memo.util.toast
 import kotlinx.android.synthetic.main.create_post_fragment.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,9 +53,13 @@ class CreatePostFragment : Fragment() {
             }
         })
 
-
         ivImage.setOnClickListener {
             selectImage()
+            toast(getString(R.string.please_wait))
+        }
+
+        ivCancelImage.setOnClickListener{
+            imageSelectedUIState(false)
         }
     }
 
@@ -63,6 +68,7 @@ class CreatePostFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         postingUIState(false)
+        imageSelectedUIState(false)
 
         postButton.setOnClickListener{
             it.visibility = View.GONE
@@ -87,7 +93,7 @@ class CreatePostFragment : Fragment() {
     }
 
 
-    fun postingUIState(state: Boolean){
+    private fun postingUIState(state: Boolean){
         if(state){
             progressBar.visibility = View.VISIBLE
             postButton.visibility = View.GONE
@@ -97,6 +103,19 @@ class CreatePostFragment : Fragment() {
             editText.text.clear()
         }
     }
+
+    private fun imageSelectedUIState(state: Boolean){
+        if(state){
+            ivCancelImage.visibility = View.VISIBLE
+            tvImageLabel.text = getString(R.string.image_selected_true)
+        }else{
+            ivCancelImage.visibility = View.GONE
+            tvImageLabel.text = getString(R.string.image_selected_default)
+            ivImage.setImageResource(R.drawable.ic_picture)
+            imagePath = null
+        }
+    }
+
 
     private fun selectImage(){
         val intent = Intent(context, FilePickerActivity::class.java)
@@ -116,6 +135,7 @@ class CreatePostFragment : Fragment() {
             if(requestCode == imagePickerRequest){//after the user selects an image:
                 val imageFiles: ArrayList<MediaFile>? = data?.getParcelableArrayListExtra<MediaFile>(FilePickerActivity.MEDIA_FILES)
                 ivImage.setImageBitmap(viewModel.getBitmapFromResult(context!!, imageFiles))
+                imageSelectedUIState(true)
             }
         }
     }

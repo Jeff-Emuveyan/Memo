@@ -12,13 +12,13 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@+id/textView5"
-        app:layout_constraintEnd_toEndOf="@+id/textView5"
-        app:layout_constraintStart_toStartOf="@+id/textView5"
+        app:layout_constraintBottom_toTopOf="@+id/tvImageLabel"
+        app:layout_constraintEnd_toEndOf="@+id/tvImageLabel"
+        app:layout_constraintStart_toStartOf="@+id/tvImageLabel"
         app:srcCompat="@drawable/ic_picture" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/tvImageLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
@@ -132,6 +132,15 @@
         android:src="@drawable/ic_arrow_back_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivCancelImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_cancel"
+        app:layout_constraintBottom_toTopOf="@+id/ivImage"
+        app:layout_constraintEnd_toStartOf="@+id/ivImage"
+        app:layout_constraintTop_toTopOf="@+id/ivImage" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

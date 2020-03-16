@@ -22,4 +22,7 @@
     <string name="attach_video">Attach video</string>
     <string name="post">Post</string>
     <string name="network_failure_tap_to_try_again">Network failure, Tap to try again.</string>
+    <string name="image_selected_true">Image selected</string>
+    <string name="image_selected_default">Attach image</string>
+    <string name="please_wait">Please wait</string>
 </resources>
