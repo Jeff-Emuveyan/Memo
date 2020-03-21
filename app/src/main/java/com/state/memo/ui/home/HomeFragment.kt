@@ -64,7 +64,7 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
         //fetch the posts:
         homeViewModel.getPosts(context!!,onSuccess = {
-            progressBar.visibility = View.GONE
+            progressBar?.visibility = View.GONE
         },  onFailed = {
             Snackbar.make(activity?.window!!.decorView, "Something went wrong...", Snackbar.LENGTH_LONG).show()
         })
