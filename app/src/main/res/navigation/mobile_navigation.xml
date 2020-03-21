@@ -20,10 +20,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_message"
-        android:name="com.state.memo.ui.message.MessageFragment"
-        android:label="@string/title_message"
-        tools:layout="@layout/fragment_message" />
+        android:id="@+id/navigation_reminder"
+        android:name="com.state.memo.ui.reminder.ReminderFragment"
+        android:label="@string/title_reminder"
+        tools:layout="@layout/fragment_reminder" />
 
     <fragment
         android:id="@+id/navigation_settings"
