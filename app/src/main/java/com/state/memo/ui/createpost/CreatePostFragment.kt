@@ -135,6 +135,7 @@ class CreatePostFragment : Fragment() {
             if(requestCode == imagePickerRequest){//after the user selects an image:
                 val imageFiles: ArrayList<MediaFile>? = data?.getParcelableArrayListExtra<MediaFile>(FilePickerActivity.MEDIA_FILES)
                 ivImage.setImageBitmap(viewModel.getBitmapFromResult(context!!, imageFiles))
+                imagePath = viewModel.getFilePathFromResult(context!!, imageFiles)
                 imageSelectedUIState(true)
             }
         }

@@ -17,14 +17,31 @@ class CreatePostViewModel : ViewModel() {
     }
 
     suspend fun post(context: Context, data: Data){
-        val user = CreatePostRepository(context!!).getUserSynchronously(1)
+        val user = CreatePostRepository(context).getUserSynchronously(1)
+        //check if the data contains
         val post = Post(user, data, System.currentTimeMillis())
-        val task = CreatePostRepository(context!!).postData(post)
-        task.addOnCompleteListener {
-            postStatus.value = it.isSuccessful
+        if(userSelectedMediaFile(post)){ //the user selected an image or video
+            CreatePostRepository(context).postDataContainingMedia(post){
+                postStatus.value = it
+            }
+        }else{//user didn't attach a media file:
+            val task = CreatePostRepository(context).postData(post)
+            task.addOnCompleteListener {
+                postStatus.value = it.isSuccessful
+            }
         }
     }
 
+
+
+    private fun userSelectedMediaFile(post: Post): Boolean {
+        val imagePath = post.data.imagePath
+        val videoPath = post.data.videPath
+        if((imagePath != null && imagePath.isNotEmpty()) || (videoPath != null && videoPath.isNotEmpty())){
+            return true
+        }
+        return false
+    }
 
     infix fun collectAndValidateData(userData: Data): Boolean{
         return !((userData.text == null || userData.text == "") &&
@@ -38,6 +55,15 @@ class CreatePostViewModel : ViewModel() {
             val firstMediaFile = imageFiles[0]
             val uri = firstMediaFile.uri
             return MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+        }
+        return null
+    }
+
+
+    fun getFilePathFromResult(context: Context, imageFiles: ArrayList<MediaFile>?): String? {
+        if(imageFiles != null && imageFiles.size > 0){
+            val firstMediaFile = imageFiles[0]
+            return  firstMediaFile.uri.path
         }
         return null
     }
