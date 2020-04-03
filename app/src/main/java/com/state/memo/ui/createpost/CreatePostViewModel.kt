@@ -21,9 +21,9 @@ class CreatePostViewModel : ViewModel() {
         //check if the data contains
         val post = Post(user, data, System.currentTimeMillis())
         if(userSelectedMediaFile(post)){ //the user selected an image or video
-            CreatePostRepository(context).postDataContainingMedia(post){
+            CreatePostRepository(context).postDataContainingMedia(post, onFinish = {
                 postStatus.value = it
-            }
+            })
         }else{//user didn't attach a media file:
             val task = CreatePostRepository(context).postData(post)
             task.addOnCompleteListener {
@@ -63,7 +63,7 @@ class CreatePostViewModel : ViewModel() {
     fun getFilePathFromResult(context: Context, imageFiles: ArrayList<MediaFile>?): String? {
         if(imageFiles != null && imageFiles.size > 0){
             val firstMediaFile = imageFiles[0]
-            return  firstMediaFile.uri.path
+            return  firstMediaFile.path
         }
         return null
     }
