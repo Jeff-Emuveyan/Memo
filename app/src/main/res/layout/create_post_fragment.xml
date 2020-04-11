@@ -8,7 +8,7 @@
     tools:context=".ui.createpost.CreatePostFragment">
 
     <ImageView
-        android:id="@+id/ivImage"
+        android:id="@+id/ivPickImage"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:scaleType="centerCrop"
@@ -138,9 +138,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_cancel"
-        app:layout_constraintBottom_toTopOf="@+id/ivImage"
-        app:layout_constraintEnd_toStartOf="@+id/ivImage"
-        app:layout_constraintTop_toTopOf="@+id/ivImage" />
+        app:layout_constraintBottom_toTopOf="@+id/ivPickImage"
+        app:layout_constraintEnd_toStartOf="@+id/ivPickImage"
+        app:layout_constraintTop_toTopOf="@+id/ivPickImage" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

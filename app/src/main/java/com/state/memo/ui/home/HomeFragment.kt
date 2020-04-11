@@ -25,8 +25,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.state.memo.R
 import com.state.memo.ui.MainActivity
 import com.state.memo.data.home.HomeRepository
+import com.state.memo.model.MediaFileUploadStatus
 import com.state.memo.model.Post
+import com.state.memo.ui.MainActivityViewModel
 import com.state.memo.util.showSnackMessage
+import kotlinx.android.synthetic.main.file_upload_layout.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.launch
 
@@ -35,7 +38,8 @@ const val  RC_SIGN_IN: Int = 44
 class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
 
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var viewModel: HomeViewModel
+    private lateinit var mainActivityViewModel: MainActivityViewModel
     private lateinit var postListAdapter: PostListAdapter
 
     override fun onCreateView(
@@ -43,7 +47,9 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        mainActivityViewModel = ViewModelProviders.of(activity!!).get(MainActivityViewModel::class.java)
+
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -58,12 +64,18 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             popup.show()
         }
 
+        fileUploadUI.visibility = View.GONE
+
         floatingActionButton.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_writePostFragment)
         }
 
+        ivCancelFileUpload.setOnClickListener{
+            mainActivityViewModel.cancelFileUpload()
+        }
+
         //fetch the posts:
-        homeViewModel.getPosts(context!!,onSuccess = {
+        viewModel.getPosts(context!!,onSuccess = {
             progressBar?.visibility = View.GONE
         },  onFailed = {
             Snackbar.make(activity?.window!!.decorView, "Something went wrong...", Snackbar.LENGTH_LONG).show()
@@ -73,13 +85,38 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         HomeRepository(context!!).getUser(1).observe(viewLifecycleOwner,Observer {
             controlAdminPrivileges()
         })
 
-        //listen for posts:
-        homeViewModel.posts.observe(viewLifecycleOwner, Observer {
+        //listen for posts from server:
+        viewModel.posts.observe(viewLifecycleOwner, Observer {
             handlePosts(it)
+        })
+
+        //listen to know if a media file is being uploaded
+        mainActivityViewModel.mediaFileUploadStatus.observe(viewLifecycleOwner, Observer { it ->
+            when(it){
+               MediaFileUploadStatus.UPLOADING -> {
+                   fileUploadUI.visibility = View.VISIBLE
+                   fileUploadProgressBar.max = it.totalBytes
+                   fileUploadProgressBar.progress = it.bytesTransferred
+               }
+                MediaFileUploadStatus.DEFAULT ->
+                   fileUploadUI.visibility = View.GONE
+
+                MediaFileUploadStatus.CANCELLED ->{
+                    fileUploadUI.visibility = View.GONE
+                    showSnackMessage(activity!!, "Cancelled")
+                }
+               MediaFileUploadStatus.FAILED -> {
+                   fileUploadUI.visibility = View.GONE
+                   Snackbar.make(activity?.window!!.decorView,
+                       "File upload failed, try again...", Snackbar.LENGTH_LONG).show()
+               }
+
+           }
         })
     }
 
@@ -99,7 +136,7 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 return true
             }
             R.id.sign_out ->{
-                homeViewModel.signOut(context!!)
+                viewModel.signOut(context!!)
                 return true
             }
         }
@@ -112,7 +149,7 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
      * ***/
     private fun launchFirebaseAuthentication() = startActivityForResult(AuthUI.getInstance()
                 .createSignInIntentBuilder()
-                .setAvailableProviders(homeViewModel.getAuthProviders())
+                .setAvailableProviders(viewModel.getAuthProviders())
                 .build(),
             RC_SIGN_IN)
 
@@ -154,7 +191,7 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private fun controlAdminPrivileges() {
         //hide the 'create post' button if the user is not Admin:
         lifecycleScope.launch {
-            if(!homeViewModel.isUserAdmin(context!!)){
+            if(!viewModel.isUserAdmin(context!!)){
                 floatingActionButton.visibility = View.INVISIBLE
             }else{
                 floatingActionButton.visibility = View.VISIBLE

@@ -34,5 +34,12 @@
         android:id="@+id/writePostFragment"
         android:name="com.state.memo.ui.createpost.CreatePostFragment"
         android:label="write_post_fragment"
-        tools:layout="@layout/create_post_fragment" />
+        tools:layout="@layout/create_post_fragment" >
+        <action
+            android:id="@+id/action_writePostFragment_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
