@@ -77,7 +77,7 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
         swipeRefreshLayout.setOnRefreshListener {
             //fetch the posts:
-            fetchPosts(viewModel)
+            fetchPosts(viewModel, true)
         }
 
         //fetch the posts:
@@ -85,10 +85,13 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     }
 
-    private fun fetchPosts(viewModel: HomeViewModel) {
+    private fun fetchPosts(viewModel: HomeViewModel, swipeRefresh: Boolean = false) {
+        if(!swipeRefresh){
+            progressBar?.visibility = View.VISIBLE
+        }
         viewModel.getPosts(context!!,onSuccess = {
             progressBar?.visibility = View.GONE
-            swipeRefreshLayout.isRefreshing = false //in cases where the user user swipe to fecth posts
+            swipeRefreshLayout.isRefreshing = false //in cases where the user user swipe to fetch posts
         },  onFailed = {
             progressBar?.visibility = View.GONE
             swipeRefreshLayout.isRefreshing = false
@@ -133,7 +136,13 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 MediaFileUploadStatus.DEFAULT ->
                    fileUploadUI.visibility = View.GONE
 
-                MediaFileUploadStatus.CANCELLED ->{
+                MediaFileUploadStatus.UPLOAD_COMPLETED ->{
+                    fileUploadUI.visibility = View.GONE
+                    //refresh the list to fetch the latest added post
+                    fetchPosts(viewModel)
+                }
+
+                MediaFileUploadStatus.CANCELLED -> {
                     fileUploadUI.visibility = View.GONE
                     showSnackMessage(activity!!, "Cancelled")
                 }

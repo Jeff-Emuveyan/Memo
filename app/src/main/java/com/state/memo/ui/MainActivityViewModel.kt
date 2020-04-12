@@ -76,7 +76,7 @@ class MainActivityViewModel : ViewModel(){
             }
                 ,onFinish = {
                 if(it){//the media file was uploaded successfully so proceed to upload the rest data
-                    mediaFileUploadStatus.postValue(MediaFileUploadStatus.DEFAULT)
+                    mediaFileUploadStatus.postValue(MediaFileUploadStatus.UPLOAD_COMPLETED)
                     sync(post)
                 }else{
                     postStatus.postValue(false)
