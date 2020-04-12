@@ -74,14 +74,28 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             mainActivityViewModel.cancelFileUpload()
         }
 
+
+        swipeRefreshLayout.setOnRefreshListener {
+            //fetch the posts:
+            fetchPosts(viewModel)
+        }
+
         //fetch the posts:
-        viewModel.getPosts(context!!,onSuccess = {
-            progressBar?.visibility = View.GONE
-        },  onFailed = {
-            Snackbar.make(activity?.window!!.decorView, "Something went wrong...", Snackbar.LENGTH_LONG).show()
-        })
+        fetchPosts(viewModel)
 
     }
+
+    private fun fetchPosts(viewModel: HomeViewModel) {
+        viewModel.getPosts(context!!,onSuccess = {
+            progressBar?.visibility = View.GONE
+            swipeRefreshLayout.isRefreshing = false //in cases where the user user swipe to fecth posts
+        },  onFailed = {
+            progressBar?.visibility = View.GONE
+            swipeRefreshLayout.isRefreshing = false
+            Snackbar.make(activity?.window!!.decorView, "Something went wrong...", Snackbar.LENGTH_LONG).show()
+        })
+    }
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
