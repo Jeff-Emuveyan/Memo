@@ -95,6 +95,19 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             handlePosts(it)
         })
 
+
+        //checks to know when a post has been uploaded successfully:
+        mainActivityViewModel.postStatus.observe(viewLifecycleOwner, Observer {
+            if(it == true){
+                showSnackMessage(activity!!, "Done!")
+                mainActivityViewModel.postStatus.value = null//reset it
+            }else if(it == false){
+                showSnackMessage(activity!!, "Failed to upload, try again")
+                mainActivityViewModel.postStatus.value = null//reset it
+            }
+        })
+
+
         //listen to know if a media file is being uploaded
         mainActivityViewModel.mediaFileUploadStatus.observe(viewLifecycleOwner, Observer { it ->
             when(it){
@@ -118,6 +131,7 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
            }
         })
+
     }
 
 

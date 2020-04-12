@@ -2,9 +2,14 @@ package com.state.memo.ui.createpost
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -17,6 +22,7 @@ import com.state.memo.R
 import com.state.memo.model.Data
 import com.state.memo.model.MediaFileUploadStatus
 import com.state.memo.ui.MainActivityViewModel
+import com.state.memo.util.CreatePostUIState
 import com.state.memo.util.mediaFileUploadStatus
 import com.state.memo.util.showSnackMessage
 import com.state.memo.util.toast
@@ -51,10 +57,12 @@ class CreatePostFragment : Fragment() {
         //checks to know when a post has been uploaded successfully:
         mainActivityViewModel.postStatus.observe(viewLifecycleOwner, Observer {
             if(it == true){
-                showSnackMessage(activity!!.window!!.decorView, "Done!")
-                postingUIState(false)
+                postingUIState(CreatePostUIState.SUCCESS)
+                mainActivityViewModel.postStatus.value = null//reset it
             }else if(it == false){
+                postingUIState(CreatePostUIState.FAILED)
                 showSnackMessage(activity!!.window!!.decorView, "Failed to upload, try again")
+                mainActivityViewModel.postStatus.value = null//reset it
             }
         })
 
@@ -62,9 +70,7 @@ class CreatePostFragment : Fragment() {
         mainActivityViewModel.mediaFileUploadStatus.observe(viewLifecycleOwner, Observer {
             if(it == MediaFileUploadStatus.UPLOADING){
                 //Go back to home fragment so that user can see the upload process:
-                val bundle = Bundle()
-                bundle.putString(mediaFileUploadStatus, it.name)
-                findNavController().navigate(R.id.action_writePostFragment_to_navigation_home, bundle)
+                findNavController().navigate(R.id.action_writePostFragment_to_navigation_home)
             }
         })
 
@@ -74,8 +80,10 @@ class CreatePostFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        postingUIState(false)
+        postingUIState(CreatePostUIState.DEFAULT)
         imageSelectedUIState(false)
+
+        editText.doOnTextChanged { _, _, _, _ -> tvPostSuccessful.visibility = View.GONE }
 
         postButton.setOnClickListener{
             it.visibility = View.GONE
@@ -100,27 +108,50 @@ class CreatePostFragment : Fragment() {
 
     private fun postData(coroutineScope: CoroutineScope, data: Data){
         coroutineScope.launch(Dispatchers.Main) {
-            postingUIState(true)
+            postingUIState(CreatePostUIState.IN_PROGRESS)
             if(viewModel collectAndValidateData data){
                 withContext(Dispatchers.IO){
                     mainActivityViewModel.post(context!!, data)
                 }
             }else{
-                postingUIState(false)
+                postingUIState(CreatePostUIState.DEFAULT)
                 showSnackMessage(activity!!.window!!.decorView, "Post cannot be empty...")
             }
         }
     }
 
 
-    private fun postingUIState(state: Boolean){
-        if(state){
-            progressBar.visibility = View.VISIBLE
-            postButton.visibility = View.GONE
-        }else{
-            progressBar.visibility = View.GONE
-            postButton.visibility = View.VISIBLE
-            editText.text.clear()
+    /**
+     * 'true' means the fragment is in progress of posting data
+     * 'false' means the fragment is not doing any work
+     * **/
+    private fun postingUIState(state: CreatePostUIState){
+
+        when(state){
+            CreatePostUIState.IN_PROGRESS -> {
+                progressBar.visibility = View.VISIBLE
+                postButton.visibility = View.GONE
+                tvPostSuccessful.visibility = View.GONE
+            }
+            CreatePostUIState.DEFAULT ->{
+                progressBar.visibility = View.GONE
+                postButton.visibility = View.VISIBLE
+                editText.text.clear()
+                tvPostSuccessful.visibility = View.GONE
+            }
+            CreatePostUIState.SUCCESS ->{
+                progressBar.visibility = View.GONE
+                postButton.visibility = View.VISIBLE
+                editText.text.clear()
+                tvPostSuccessful.visibility = View.VISIBLE
+            }
+
+            CreatePostUIState.FAILED ->{
+                progressBar.visibility = View.GONE
+                postButton.visibility = View.VISIBLE
+                tvPostSuccessful.visibility = View.GONE
+            }
+
         }
     }
 
@@ -160,4 +191,5 @@ class CreatePostFragment : Fragment() {
             }
         }
     }
+
 }

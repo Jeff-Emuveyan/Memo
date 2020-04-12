@@ -59,3 +59,12 @@ fun getMediaFilePath(post: Post): String{
     }else{ "" }
 }
 
+
+enum class CreatePostUIState{
+    DEFAULT,
+    IN_PROGRESS,
+    SUCCESS,
+    FAILED
+}
+
+
