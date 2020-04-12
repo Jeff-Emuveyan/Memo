@@ -70,7 +70,7 @@ class CreatePostFragment : Fragment() {
         mainActivityViewModel.mediaFileUploadStatus.observe(viewLifecycleOwner, Observer {
             if(it == MediaFileUploadStatus.UPLOADING){
                 //Go back to home fragment so that user can see the upload process:
-                findNavController().navigate(R.id.action_writePostFragment_to_navigation_home)
+                findNavController().popBackStack()
             }
         })
 
@@ -101,7 +101,7 @@ class CreatePostFragment : Fragment() {
         }
 
         ivBackButton.setOnClickListener{
-            findNavController().navigate(R.id.action_writePostFragment_to_navigation_home)
+            findNavController().popBackStack()
         }
     }
 
