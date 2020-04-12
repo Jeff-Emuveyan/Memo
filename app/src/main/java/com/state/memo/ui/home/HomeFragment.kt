@@ -132,6 +132,13 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                    fileUploadUI.visibility = View.VISIBLE
                    fileUploadProgressBar.max = it.totalBytes
                    fileUploadProgressBar.progress = it.bytesTransferred
+                   //fetchPosts() always runs whenever this Fragment starts.
+                   //And this will cause 'progressBar' to show. If the user is uploading a file,
+                   //there will be two (fileUploadProgressBar and progressBar) visible. So we have to
+                   //hide one of them:
+                   progressBar?.visibility = View.GONE
+                   //In this case, even though fetchPosts() will be running, it can do so without the need to show
+                   //its own progress bar because 'fileUploadProgressBar' will be visible.
                }
                 MediaFileUploadStatus.DEFAULT ->
                    fileUploadUI.visibility = View.GONE
